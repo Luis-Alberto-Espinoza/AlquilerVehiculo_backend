@@ -3,6 +3,7 @@ package PP.alquilerVehiculo.servicio;
 
 import PP.alquilerVehiculo.entidad.Cliente;
 import PP.alquilerVehiculo.excepciones.ClienteServiceException;
+import PP.alquilerVehiculo.excepciones.ExceptionDetail;
 import PP.alquilerVehiculo.repositorios.ClienteRepositorio;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,7 +158,8 @@ public class ClienteServicio implements BaseService<Cliente> {
             clienteRepositorio.save(cliente);
         } else {
             //Si el método .isPresent() da false es porque no se encontró ningún Cliente
-            throw new ClienteServiceException("No se encontró el cliente solicitado.");
+            throw new ClienteServiceException("No se encontró el cliente solicitado.",
+            new ExceptionDetail("mensaje para el usuario", "danger"));
         }
     }
 
@@ -182,7 +184,8 @@ public class ClienteServicio implements BaseService<Cliente> {
 
         } else {
             //Si el método .isPresent() da false es porque no se encontró ningún Cliente
-            throw new ClienteServiceException("No se encontró el cliente solicitado.");
+            throw new ClienteServiceException("No se encontró el cliente solicitado.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         }
     }
 
@@ -207,7 +210,8 @@ public class ClienteServicio implements BaseService<Cliente> {
 
         } else {
             //Si el método .isPresent() da false es porque no se encontró ningún Cliente
-            throw new ClienteServiceException("No se encontró el cliente solicitado.");
+            throw new ClienteServiceException("No se encontró el cliente solicitado.",
+            new ExceptionDetail("mensaje para el usuario", "danger"));
         }
     }
 
@@ -220,27 +224,32 @@ public class ClienteServicio implements BaseService<Cliente> {
 
         //Validaciones de los argumentos
         if (nombre == null || nombre.isEmpty()) {
-            throw new ClienteServiceException("El nombre del cliente no puede ser nulo.");
+            throw new ClienteServiceException("El nombre del cliente no puede ser nulo.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         }
         if (apellido == null || apellido.isEmpty()) {
-            throw new ClienteServiceException("El apellido del cliente no puede ser nulo.");
+            throw new ClienteServiceException("El apellido del cliente no puede ser nulo.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         }
         if (email == null || email.isEmpty()) {
-            throw new ClienteServiceException("El email del cliente no puede ser nulo.");
+            throw new ClienteServiceException("El email del cliente no puede ser nulo.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         } else if (!email.contains("@")) {
-            throw new ClienteServiceException("El email del cliente no es válido.");
+            throw new ClienteServiceException("El email del cliente no es válido.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         } else if (clienteRepositorio.buscarPorMail(email) != null && newUser) {
-            throw new ClienteServiceException("El mail ya está en uso.");
+            throw new ClienteServiceException("El mail ya está en uso.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         }
         if (clave1 == null || clave1.isEmpty()) {
-            throw new ClienteServiceException("La clave del cliente no puede ser nulo.");
-        } else if (clave1.length() < 8) {
-            throw new ClienteServiceException("La clave del cliente debe contener 8 o más caracteres.");
+            throw new ClienteServiceException("La clave del cliente no puede ser nulo.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         }
 
         //Validamos que las dos claves recibidas sean iguales
         if (!clave1.equals(clave2)) {
-            throw new ClienteServiceException("Las contraseñas no coinciden.");
+            throw new ClienteServiceException("Las contraseñas no coinciden.",
+                    new ExceptionDetail("mensaje para el usuario", "danger"));
         }
     }
 

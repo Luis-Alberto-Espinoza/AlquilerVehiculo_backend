@@ -26,10 +26,11 @@ public class ClienteControlador {
 
 
     @GetMapping("/")
-    public String clienteInicio() throws Exception {
+    public List<Cliente> clienteInicio() throws Exception {
+
 //        Cliente usuario = clienteServicio.buscarXcorreo(correo);
 //        List<Vehiculo> listVehiculos = vehiculoServicio.findAll();
-        return "index_cliente";
+        return clienteServicio.findAll();
     }
 
     @GetMapping("/editar-perfil")
