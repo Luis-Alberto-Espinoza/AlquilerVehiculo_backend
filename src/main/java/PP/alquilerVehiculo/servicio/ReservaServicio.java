@@ -31,7 +31,7 @@ public class ReservaServicio implements BaseService<ReservaWeb> {
 
     @Override
     @Transactional
-    public ReservaWeb findById(long id) throws Exception {
+    public ReservaWeb findById(Integer id) throws Exception {
         try {
             Optional<ReservaWeb> entityOptional = reservaRepositorio.findById(id);
             return entityOptional.get();
@@ -53,7 +53,7 @@ public class ReservaServicio implements BaseService<ReservaWeb> {
 
     @Override
     @Transactional
-    public void deleteById(long id) throws Exception {
+    public void deleteById(Integer id) throws Exception {
         try {
             reservaRepositorio.deleteById(id);
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class ReservaServicio implements BaseService<ReservaWeb> {
 
     @Override
     @Transactional
-    public ReservaWeb update(long id, ReservaWeb entity) throws Exception {
+    public ReservaWeb update(Integer id, ReservaWeb entity) throws Exception {
         try {
             Optional<ReservaWeb> entityoptional = reservaRepositorio.findById(id);
             ReservaWeb reservaWeb = entityoptional.get();
@@ -75,7 +75,7 @@ public class ReservaServicio implements BaseService<ReservaWeb> {
     }
 
     @Transactional
-    public void guardarReserva(Cliente cliente, Vehiculo vehiculo, List<LocalDate> lFechas) throws Exception {
+    public void guardarReserva(Cliente cliente, Vehiculo vehiculo, List<Date> lFechas) throws Exception {
         //Se crea la nueva reserva y se le setea los atributos recibidos
         ReservaWeb newReserva = new ReservaWeb();
         newReserva.setCliente(cliente);

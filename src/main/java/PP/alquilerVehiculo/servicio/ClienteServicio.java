@@ -24,7 +24,7 @@ public class ClienteServicio implements BaseService<Cliente> {
     }
 
     public String hayClienteXdni(String dni) {
-        Long entrada = Long.parseLong(dni);
+        Integer entrada = Integer.valueOf(dni);
         return clienteRepositorio.existeClienteXdni(entrada);
     }
 
@@ -37,7 +37,7 @@ public class ClienteServicio implements BaseService<Cliente> {
     }
 
     @Transactional
-    public Cliente buscarXdni(Long dni) {
+    public Cliente buscarXdni(Integer dni) {
         Cliente cliente;
         return clienteRepositorio.buscarPorDNI(dni);
     }
@@ -47,7 +47,7 @@ public class ClienteServicio implements BaseService<Cliente> {
     }
 
     @Transactional
-    public boolean registrar(String nombre, String apellido, String email, String clave1, String clave2, String direccion, LocalDate fNacimiento, long telefono, long dni) throws ClienteServiceException {
+    public boolean registrar(String nombre, String apellido, String email, String clave1, String clave2, String direccion, Date fNacimiento, long telefono, long dni) throws ClienteServiceException {
         //Validación de los parámetros
         if (validar(nombre, apellido, email, clave1, clave2, direccion, fNacimiento, telefono, dni)) {
             //Creamos el Objeto Cliente
@@ -57,7 +57,7 @@ public class ClienteServicio implements BaseService<Cliente> {
             cliente.setApellido(apellido);
             cliente.setMail(email);
             cliente.setClave1(clave1);
-            cliente.setAlta(LocalDate.now());
+            cliente.setAlta(new Date());
             cliente.setDni(dni);
             cliente.setDireccion(direccion);
             cliente.setTelefono(telefono);
@@ -73,7 +73,7 @@ public class ClienteServicio implements BaseService<Cliente> {
     }
 
     private boolean validar(String nombre, String apellido, String email, String clave1, String clave2,
-                            String direccion, LocalDate fNacimiento, long telefono, Long dni) {
+                            String direccion, Date fNacimiento, long telefono, long dni) {
         int contador = 0;
         //Validaciones de los argumentos
         if (nombre == null || nombre.isEmpty()) {
@@ -123,7 +123,7 @@ public class ClienteServicio implements BaseService<Cliente> {
             contador++;
             System.out.println("El Edad del cliente no puede ser menor a 18 años.");
         }
-        if (dni == null || dni.longValue() < 8) {
+        if (dni == 0 || dni < 8) {
             contador++;
             System.out.println("El DNI del cliente no fue bien colocado.");
         }
@@ -140,9 +140,9 @@ public class ClienteServicio implements BaseService<Cliente> {
 
     //Modificar un Cliente ya existente en la base de datos
     @Transactional
-    public void modificar(long id, String nombre, String apellido, String email, String clave1, String clave2) throws ClienteServiceException { //  ,  String direccion, long edad, long telefono, Long dni ) throws ClienteServiceException {
+    public void modificar(Integer id, String nombre, String apellido, String email, String clave1, String clave2) throws ClienteServiceException {
         //Validamos que se encuentre un Cliente con el Id recibido
-        Optional<Cliente> respuesta = clienteRepositorio.findById(id);
+        Optional<Cliente> respuesta = clienteRepositorio.findById(Integer.valueOf(id));
 
         //Método que devuelve true si se encontró un registro en la base de datos
         if (respuesta.isPresent()) {
@@ -163,7 +163,7 @@ public class ClienteServicio implements BaseService<Cliente> {
 
     //Método para deshabilitar un Cliente
     @Transactional
-    public void deshabilitar(long id) throws ClienteServiceException {
+    public void deshabilitar(Integer id) throws ClienteServiceException {
 
         //Validamos que se encuentre un Cliente con el Id recibido
         Optional<Cliente> respuesta = clienteRepositorio.findById(id);
@@ -175,7 +175,7 @@ public class ClienteServicio implements BaseService<Cliente> {
             Cliente cliente = respuesta.get();
 
             //Seteamos la fecha actual de baja del Cliente
-            cliente.setBaja(LocalDate.now());
+            cliente.setBaja(new Date());
 
             //Actualizamos la entrada dentro del repositorio usando el mismo método save()
             clienteRepositorio.save(cliente);
@@ -188,7 +188,7 @@ public class ClienteServicio implements BaseService<Cliente> {
 
     //Método para rehabilitar un Cliente
     @Transactional
-    public void rehabilitar(long id) throws ClienteServiceException {
+    public void rehabilitar(Integer id) throws ClienteServiceException {
 
         //Validamos que se encuentre un Cliente con el Id recibido
         Optional<Cliente> respuesta = clienteRepositorio.findById(id);
@@ -211,7 +211,7 @@ public class ClienteServicio implements BaseService<Cliente> {
         }
     }
 
-    public Cliente buscarPorId(long id) {
+    public Cliente buscarPorId(Integer id) {
         return clienteRepositorio.getReferenceById(id);
     }
 
@@ -257,7 +257,7 @@ public class ClienteServicio implements BaseService<Cliente> {
 
     @Override
     @Transactional
-    public Cliente findById(long id) throws Exception {
+    public Cliente findById(Integer id) throws Exception {
         try {
             Optional<Cliente> entityOptional = clienteRepositorio.findById(id);
             return entityOptional.get();
@@ -279,7 +279,7 @@ public class ClienteServicio implements BaseService<Cliente> {
 
     @Override
     @Transactional
-    public Cliente update(long id, Cliente entity) throws Exception {
+    public Cliente update(Integer id, Cliente entity) throws Exception {
         try {
             Optional<Cliente> entityoptional = clienteRepositorio.findById(id);
             Cliente cliente = entityoptional.get();
@@ -292,7 +292,7 @@ public class ClienteServicio implements BaseService<Cliente> {
 
     @Override
     @Transactional
-    public void deleteById(long id) throws Exception {
+    public void deleteById(Integer id) throws Exception {
         try {
             if (clienteRepositorio.existsById(id)) {
                 clienteRepositorio.deleteById(id);

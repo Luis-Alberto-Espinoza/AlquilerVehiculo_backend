@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmpleadoRepositorio extends JpaRepository<Empleado, Long> {
+public interface EmpleadoRepositorio extends JpaRepository<Empleado, Integer> {
     @Query("SELECT e FROM Empleado e WHERE e.mail = :mail")
     public Empleado buscarPorEmail(@Param("mail") String mail);
 

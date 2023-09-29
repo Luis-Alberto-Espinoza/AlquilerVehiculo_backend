@@ -27,13 +27,13 @@ public class ContratoControlador {
     EmpleadoServicio empleadoServicio;
 
     @GetMapping("/")
-    public String index_contrato(@RequestParam long ide) throws Exception {
+    public String index_contrato(@RequestParam Integer ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         return "contrato_index";
     }
 
     @GetMapping("/generar_contrato")
-    public String generar_contrato(@RequestParam long idres, @RequestParam long ide) throws Exception {
+    public String generar_contrato(@RequestParam Integer idres, @RequestParam Integer ide) throws Exception {
         /*
          * verificar que la reserva no se a convertido en contrato
          * verificar que la reserva no sea vieja
@@ -44,8 +44,7 @@ public class ContratoControlador {
             System.out.println(reservaWeb.getId());
             Cliente cliente = reservaWeb.getCliente();
             Vehiculo auto = reservaWeb.getDatosVehiculo();
-            Double precioTotal = vehiculoServicio.costoTotal
-                    (String.valueOf(reservaWeb.getFechaRetiro()), String.valueOf(reservaWeb.getFechaEntrega()), auto.getId());
+            Double precioTotal = vehiculoServicio.costoTotal(String.valueOf(reservaWeb.getFechaRetiro()), String.valueOf(reservaWeb.getFechaEntrega()), auto.getId());
             return "genera_contrato";
         } else {
             return "index";
@@ -53,7 +52,7 @@ public class ContratoControlador {
     }
 
     @PostMapping("/confi_contrato")
-    public String reserva(@RequestParam Long id_reserva, @RequestParam Long ide) throws Exception {
+    public String reserva(@RequestParam Integer id_reserva, @RequestParam Integer ide) throws Exception {
         ReservaWeb reserva = reservaServicio.findById(id_reserva);
         Empleado empleado = empleadoServicio.findById(ide);
         List<Date> listadoFechas = new ArrayList<>();

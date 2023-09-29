@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContratoRepositorio extends JpaRepository<Contrato, Long> {
+public interface ContratoRepositorio extends JpaRepository<Contrato, Integer> {
     @Query("SELECT c FROM Contrato c WHERE c.reserva.id = :id")
-    public Contrato contratoXidReserva(@Param("id") Long id);
+    public Contrato contratoXidReserva(@Param("id") Integer id);
 
     @Query("SELECT c FROM Contrato c WHERE c.reserva.cliente.id = :id")
-    public List<Cliente> contratoXidCliente(@Param("id") Long id);
+    public List<Cliente> contratoXidCliente(@Param("id") Integer id);
 
     @Query("SELECT count (reserva.id) FROM Contrato WHERE reserva.id = :idres")
-    public String encontrarReservaLigada(@Param("idres") Long idres);
+    public String encontrarReservaLigada(@Param("idres") Integer idres);
 }

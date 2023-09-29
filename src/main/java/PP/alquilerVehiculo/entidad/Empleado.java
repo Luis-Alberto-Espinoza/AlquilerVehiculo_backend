@@ -1,27 +1,52 @@
 package PP.alquilerVehiculo.entidad;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 
-@Table(name ="Empleado")
-@Getter
-@Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-public class Empleado extends Persona{
-    private LocalDate alta;
-    private LocalDate baja;
+@Table(name = "Empleado")
+public class Empleado extends Persona {
+    private Date alta;
+    private Date baja;
     private String typeEmpleado;
     @OneToMany(mappedBy = "empleado")
     private List<Contrato> contrato;
+
+    public Empleado() {
+    }
+
+    public Empleado(Date alta, Date baja, String typeEmpleado) {
+        this.alta = alta;
+        this.baja = baja;
+        this.typeEmpleado = typeEmpleado;
+    }
+
+    public Date getAlta() {
+        return alta;
+    }
+
+    public void setAlta(Date alta) {
+        this.alta = alta;
+    }
+
+    public Date getBaja() {
+        return baja;
+    }
+
+    public void setBaja(Date baja) {
+        this.baja = baja;
+    }
+
+    public String getTypeEmpleado() {
+        return typeEmpleado;
+    }
+
+    public void setTypeEmpleado(String typeEmpleado) {
+        this.typeEmpleado = typeEmpleado;
+    }
 }

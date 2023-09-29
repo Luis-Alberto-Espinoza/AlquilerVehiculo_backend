@@ -29,7 +29,7 @@ public class EmpleadoServicio implements BaseService<Empleado> {
     }
 
     @Override
-    public Empleado findById(long id) throws Exception {
+    public Empleado findById(Integer id) throws Exception {
         try {
             Optional<Empleado> entityOptional = empleadoRepositorio.findById(id);
             return entityOptional.get();
@@ -49,12 +49,12 @@ public class EmpleadoServicio implements BaseService<Empleado> {
     }
 
     @Override
-    public Empleado update(long id, Empleado entity) throws Exception {
+    public Empleado update(Integer id, Empleado entity) throws Exception {
         return null;
     }
 
     @Override
-    public void deleteById(long id) throws Exception {
+    public void deleteById(Integer id) throws Exception {
         try {
             empleadoRepositorio.deleteById(id);
         } catch (Exception e) {

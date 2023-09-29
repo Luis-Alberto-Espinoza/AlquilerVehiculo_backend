@@ -33,14 +33,14 @@ public class ClienteControlador {
     }
 
     @GetMapping("/editar-perfil")
-    public String editarPerfil(@RequestParam Long id) {
+    public String editarPerfil(@RequestParam Integer id) {
         Cliente clienteLog = null;
         clienteLog = clienteServicio.buscarPorId(id);
         return "perfil";
     }
 
     @PostMapping("/actualizar-perfil")
-    public String actualizar(@RequestParam Long id,
+    public String actualizar(@RequestParam Integer id,
                              @RequestParam String nombre, @RequestParam String apellido,
                              @RequestParam String email,
                              @RequestParam String clave1, @RequestParam String clave2) throws ClienteServiceException {

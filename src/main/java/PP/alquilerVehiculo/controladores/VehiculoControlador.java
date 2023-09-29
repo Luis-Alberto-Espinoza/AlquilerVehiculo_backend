@@ -37,14 +37,14 @@ public class VehiculoControlador {
     }
 
     @GetMapping("/new_auto_1")
-    public String new_auto_1(@RequestParam Long id) throws Exception {
+    public String new_auto_1(@RequestParam Integer id) throws Exception {
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
         Empleado empleado = empleadoServicio.findById(id);
         return "registro_vehiculo.html";
     }
 
     @PostMapping("/alta")
-    public String alta_vehiculo(Long id, Long ide,
+    public String alta_vehiculo(Integer id, Integer ide,
                                 @RequestParam String marca, @RequestParam String modelo,
                                 @RequestParam String patente, @RequestParam String color,
                                 @RequestParam String tipoVehiculo, @RequestParam String cilindradaMotor,
@@ -74,7 +74,7 @@ public class VehiculoControlador {
     }
 
     @GetMapping("/delet_vehiculo")
-    public String eliminarVehiculo(Long idv, Long ide) throws Exception {
+    public String eliminarVehiculo(Integer idv, Integer ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         Vehiculo vehiculo = vehiculoServicio.findById(idv);
         String home = "/empleado/admin/?correo=" + empleado.getMail();
@@ -88,7 +88,7 @@ public class VehiculoControlador {
     }
 
     @GetMapping("/edit_vehiculo")
-    public String editarVehiculo(Long idv, Long ide) throws Exception {
+    public String editarVehiculo(Integer idv, Integer ide) throws Exception {
         Vehiculo vehiculo = vehiculoServicio.findById(idv);
         Empleado empleado = empleadoServicio.findById(ide);
         List<Vehiculo> autos = vehiculoServicio.findAll();
@@ -96,7 +96,7 @@ public class VehiculoControlador {
     }
 
     @PostMapping("/actualizar_vehiculo")
-    public String editarVehiculo1(Long idv, Long ide,
+    public String editarVehiculo1(Integer idv, Integer ide,
                                   @RequestParam String marca, @RequestParam String modelo,
                                   @RequestParam String patente, @RequestParam String color,
                                   @RequestParam String tipoVehiculo, @RequestParam String cilindradaMotor,
@@ -107,7 +107,6 @@ public class VehiculoControlador {
         Empleado empleado = empleadoServicio.findById(ide);
         String home = "/empleado/admin/?correo=" + empleado.getMail();
         Vehiculo vehiculo = vehiculoServicio.findById(idv);
-        vehiculo.setId(idv);
         vehiculo.setTipoVehiculo(tipoVehiculo);
         vehiculo.setMarca(marca);
         vehiculo.setModelo(modelo);

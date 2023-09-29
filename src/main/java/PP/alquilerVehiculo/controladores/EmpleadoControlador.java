@@ -3,25 +3,19 @@ package PP.alquilerVehiculo.controladores;
 import PP.alquilerVehiculo.entidad.Cliente;
 import PP.alquilerVehiculo.entidad.Empleado;
 import PP.alquilerVehiculo.entidad.Vehiculo;
-import PP.alquilerVehiculo.excepciones.ClienteServiceException;
 import PP.alquilerVehiculo.servicio.ClienteServicio;
 import PP.alquilerVehiculo.servicio.EmpleadoServicio;
 import PP.alquilerVehiculo.servicio.VehiculoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.http.HttpClient;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -46,31 +40,31 @@ public class EmpleadoControlador {
 
     @GetMapping("/admin_p")
     //http://localhost:9000/cliente/?correo=Correocliente_14%40correo.com&password=123456
-    public String admin_persona(@RequestParam Long ide) throws Exception {
+    public String admin_persona(@RequestParam Integer ide) throws Exception {
         List<Empleado> empleados = empleadoServicio.findAll();
         Empleado usuario = empleadoServicio.findById(ide);
         return "admin_p";
     }
 
     @GetMapping("/delet_empleado")
-    public String eliminarVehiculo(Long idm, Long ide, RedirectAttributes redirectAttrs) throws Exception {
+    public String eliminarVehiculo(Integer idm, Integer ide, RedirectAttributes redirectAttrs) throws Exception {
         empleadoServicio.deleteById(idm);
         redirectAttrs.addAttribute("correo", empleadoServicio.findById(ide).getId());
         return "redirect:/empleado/admin_p/?ide={correo}";
     }
 
     @GetMapping("/new_empleado_1")//ide=2009
-    public String new_empleado_1(@RequestParam Long ide) throws Exception {
+    public String new_empleado_1(@RequestParam Integer ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         return "new_empleado1";
     }
 
     @GetMapping("/new_empleado_2")//?ide=2009&dni=29148574
-    public String new_empleado_2(@RequestParam Long ide, String dni) throws Exception {
+    public String new_empleado_2(@RequestParam Integer ide, String dni) throws Exception {
         Empleado empleadoLog = empleadoServicio.findById(ide);
 
         if (clienteServicio.hayClienteXdni(dni).equals("1")) {
-            Cliente clienteNew = clienteServicio.buscarXdni(Long.parseLong(dni));
+            Cliente clienteNew = clienteServicio.buscarXdni(Integer.valueOf(dni));
         } else if (empleadoServicio.existeEmpleadoXdni(dni).equals("1")) {
             Empleado empleadoNew = empleadoServicio.buscarXdni(dni);
         } else {
@@ -80,11 +74,11 @@ public class EmpleadoControlador {
     }
 
     @PostMapping("/new_empleado_3")
-    public String saveNewEmpleado(Long ide,
+    public String saveNewEmpleado(Integer ide,
                                   @RequestParam String nombre, @RequestParam String apellido,
                                   @RequestParam String email, @RequestParam String clave1,
-                                  @RequestParam String direccion, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fNacimiento,
-                                  @RequestParam Long telefono, @RequestParam Long dni, @RequestParam String typeEmpleado) throws Exception {
+                                  @RequestParam String direccion, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fNacimiento,
+                                  @RequestParam Integer telefono, @RequestParam Integer dni, @RequestParam String typeEmpleado) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         String titulo1 = "", titulo2 = "", descripcion = "";
         String hayEmpleado = empleadoServicio.existeEmpleado(email);
@@ -92,7 +86,7 @@ public class EmpleadoControlador {
         if (hayEmpleado.equals("0")) {
             newEmpleado = new Empleado();
             titulo2 = "El empleado fue creado";
-            LocalDate fechaRegistro = LocalDate.now();
+            Date fechaRegistro = new Date();
             newEmpleado.setAlta(fechaRegistro);
         } else {
             newEmpleado = empleadoServicio.buscarXdni(String.valueOf(dni));
@@ -115,7 +109,7 @@ public class EmpleadoControlador {
     }
 
     @GetMapping("/edit_empleado")
-    public String editarVehiculoEmpleado(Long idm, Long ide) throws Exception {
+    public String editarVehiculoEmpleado(Integer idm, Integer ide) throws Exception {
         Empleado aModificar = empleadoServicio.findById(idm);
         Empleado empleado = empleadoServicio.findById(ide);
         return "new_empleado2";
@@ -123,7 +117,7 @@ public class EmpleadoControlador {
 
     @GetMapping("/admin_v")
     //http://localhost:9000/cliente/?correo=Correocliente_14%40correo.com&password=123456
-    public String admin_vehiculo(@RequestParam Long id) throws Exception {
+    public String admin_vehiculo(@RequestParam Integer id) throws Exception {
         Empleado empleado = empleadoServicio.findById(id);
         List<Vehiculo> vehiculo = vehiculoServicio.findAll();
         return "admin_v";

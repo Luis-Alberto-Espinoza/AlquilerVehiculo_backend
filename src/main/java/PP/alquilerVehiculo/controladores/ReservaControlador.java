@@ -38,15 +38,15 @@ public class ReservaControlador {
     EmpleadoServicio empleadoServicio;
 
     @GetMapping("/")
-    public String soloReserva(@RequestParam Long ide) throws Exception {
+    public String soloReserva(@RequestParam Integer ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
         return "reserva_de_empleado";
     }
 
     @GetMapping("/generar_reserva")
-    public String generar_reserva(@RequestParam Long idv,
-                                  @RequestParam Long idc,
+    public String generar_reserva(@RequestParam Integer idv,
+                                  @RequestParam Integer idc,
                                   String fecha1,
                                   String fecha2) throws Exception {
         Vehiculo auto = vehiculoServicio.findById(idv);
@@ -56,10 +56,10 @@ public class ReservaControlador {
     }
 
     @GetMapping("/generar_reserva_empleado")
-    public String generar_reserva_empleado(@RequestParam Long idv, @RequestParam Long idc,
+    public String generar_reserva_empleado(@RequestParam Integer idv, @RequestParam Integer idc,
                                            @RequestParam String fRetiro,
                                            @RequestParam String fDevolucion,
-                                           @RequestParam Long ide) throws Exception {
+                                           @RequestParam Integer ide) throws Exception {
         Vehiculo auto = vehiculoServicio.findById(idv);
         Cliente cliente = clienteServicio.findById(idc);
         Empleado empleado = empleadoServicio.findById(ide);
@@ -68,7 +68,7 @@ public class ReservaControlador {
     }
 
     @GetMapping("/resEmp")
-    public String listarAutosReserva(@RequestParam long dni, @RequestParam Long ide,
+    public String listarAutosReserva(@RequestParam Integer dni, @RequestParam Integer ide,
                                      @RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
                                      @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion
     ) throws Exception {
@@ -79,18 +79,18 @@ public class ReservaControlador {
     }
 
     @PostMapping("/confi_reserva")
-    public String reserva(@RequestParam Long idv, @RequestParam Long idc,
-                          @RequestParam("fecha1") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
-                          @RequestParam(value = "fecha2") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion
+    public String reserva(@RequestParam Integer idv, @RequestParam Integer idc,
+                          @RequestParam("fecha1") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fRetiro,
+                          @RequestParam(value = "fecha2") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fDevolucion
     ) throws Exception {
 
         Cliente cliente = clienteServicio.findById(idc);
         Vehiculo auto = vehiculoServicio.findById(idv);
         //se genera la fecha actual para dejar asentado la fecha de gestion de la reserva
         Date fechaActual = new Date();
-        LocalDate fechaRegistro = fechaActual.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date fechaRegistro = fechaActual;
         //se crea una lista para pasar mas rapido todas las fechas
-        List<LocalDate> listadoFechas = new ArrayList<>();
+        List<Date> listadoFechas = new ArrayList<>();
         listadoFechas.add(fDevolucion);
         listadoFechas.add(fRetiro);
         listadoFechas.add(fechaRegistro);
@@ -114,18 +114,18 @@ public class ReservaControlador {
     }
 
     @PostMapping("/confi_reserva_empleado")
-    public String reserva_empleado(@RequestParam Long idv, @RequestParam Long idc, @RequestParam Long ide,
-                                   @RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
-                                   @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion
+    public String reserva_empleado(@RequestParam Integer idv, @RequestParam Integer idc, @RequestParam Integer ide,
+                                   @RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fRetiro,
+                                   @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fDevolucion
     ) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         Cliente cliente = clienteServicio.findById(idc);
         Vehiculo auto = vehiculoServicio.findById(idv);
         //se genera la fecha actual para dejar asentado la fecha de gestion de la reserva
         Date fechaActual = new Date();
-        LocalDate fechaRegistro = fechaActual.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date fechaRegistro = fechaActual;
         //se crea una lista para pasar mas rapido todas las fechas
-        List<LocalDate> listadoFechas = new ArrayList<>();
+        List<Date> listadoFechas = new ArrayList<>();
         listadoFechas.add(fDevolucion);
         listadoFechas.add(fRetiro);
         listadoFechas.add(fechaRegistro);
@@ -148,30 +148,30 @@ public class ReservaControlador {
     }
 
     @GetMapping("/mis_reservas")
-    public String historial(@RequestParam Long idc) throws Exception {
+    public String historial(@RequestParam Integer idc) throws Exception {
         Cliente cliente = clienteServicio.findById(idc);
         return "/cliente/";
     }
 
     @GetMapping("/hreservas")
-    public String h_reserva(@RequestParam Long id) {
+    public String h_reserva(@RequestParam Integer id) {
         Cliente cliente = clienteServicio.buscarPorId(id);
         List<ReservaWeb> autosReservados = reservaServicio.lDeAutosR(cliente);
         return "/hitorial_reserva_cliente";
     }
 
     @GetMapping("/edit_reserva")
-    public String editarReserva(long id_reserva) throws Exception {
+    public String editarReserva(Integer id_reserva) throws Exception {
         ReservaWeb reservaWeb = reservaServicio.findById(id_reserva);
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
-        Cliente cliente = clienteServicio.buscarXdni(reservaWeb.getCliente().getDni());
+        Cliente cliente = clienteServicio.buscarXdni(reservaWeb.getId());
         return "reserva";
     }
 
     @GetMapping("/delet_reserva")
-    public String eliminarReserva(long id_reserva) throws Exception {
+    public String eliminarReserva(Integer id_reserva) throws Exception {
         ReservaWeb reservaWeb = reservaServicio.findById(id_reserva);
-        Cliente cliente = clienteServicio.buscarXdni(reservaWeb.getCliente().getDni());
+        Cliente cliente = clienteServicio.buscarXdni(id_reserva);
         reservaServicio.deleteById(id_reserva);
         List<ReservaWeb> autosReservados = reservaServicio.lDeAutosR(cliente);
         return "/hitorial_reserva_cliente";
@@ -180,7 +180,7 @@ public class ReservaControlador {
     @GetMapping("/recibir_fecha")
     public String recibir_fecha(@RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
                                 @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion,
-                                long idc) throws Exception {
+                                Integer idc) throws Exception {
         if (fRetiro.compareTo(LocalDate.now()) >= 0) {
             Cliente cliente = clienteServicio.findById(idc);
             List<Vehiculo> vehiculosDisponibles = vehiculoServicio.autosDisponiblesXfechas(fRetiro, fDevolucion);

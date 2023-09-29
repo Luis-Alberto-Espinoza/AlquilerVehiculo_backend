@@ -56,7 +56,7 @@ public class Controlador {
     @PostMapping("/registrar")
     public String registrar(@RequestParam String nombre, @RequestParam String apellido,
                             @RequestParam String email, @RequestParam String clave1, @RequestParam String clave2,
-                            @RequestParam String direccion, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fNacimiento,
+                            @RequestParam String direccion, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fNacimiento,
                             @RequestParam Long telefono, @RequestParam Long dni) throws ClienteServiceException {
 
         //Llamamos al método registrar de ClienteServicio y le pasamos los parámetros recibidos por el controlador

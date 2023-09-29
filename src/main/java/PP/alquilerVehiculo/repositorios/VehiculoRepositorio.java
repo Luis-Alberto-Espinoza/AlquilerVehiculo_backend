@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface VehiculoRepositorio extends JpaRepository<Vehiculo, Long> {
+public interface VehiculoRepositorio extends JpaRepository<Vehiculo, Integer> {
     @Query("SELECT v FROM Vehiculo v WHERE v.id NOT IN(SELECT r.datosVehiculo.id FROM ReservaWeb r WHERE r.fechaRetiro BETWEEN :checkin AND :checkout OR r.fechaEntrega BETWEEN :checkin AND :checkout)")
     public List<Vehiculo> xidv_DisponibleFehcas(@Param("checkin") LocalDate fRetiro, @Param("checkout") LocalDate fDevolcion);
 
@@ -19,7 +19,7 @@ public interface VehiculoRepositorio extends JpaRepository<Vehiculo, Long> {
     public List<Vehiculo> listadoVehiculoDisponiblesFechas(@Param("checkin") LocalDate fRetiro, @Param("checkout") LocalDate fDevolcion);
 
     @Query("SELECT v.precio FROM Vehiculo v WHERE v.id = :id ")
-    public Double precioDiaarioVehiculo(@Param("id") Long id);
+    public Double precioDiaarioVehiculo(@Param("id") Integer id);
 
     @Query("SELECT v FROM Vehiculo v WHERE v.id  IN " +
             "(select  v.id from ReservaWeb r " +

@@ -28,7 +28,7 @@ public class ContratoServicio implements BaseService<Contrato> {
         contratoRepositorio.save(contrato);
     }
 
-    public Contrato contratoXidReserva(long id) throws Exception {
+    public Contrato contratoXidReserva(Integer id) throws Exception {
 
         Contrato optional = contratoRepositorio.contratoXidReserva(id);
         return optional;
@@ -38,7 +38,7 @@ public class ContratoServicio implements BaseService<Contrato> {
         return null;
     }
 
-    public Optional<Contrato> buscarXreserva(long id) throws Exception {
+    public Optional<Contrato> buscarXreserva(Integer id) throws Exception {
         return contratoRepositorio.findById(id);
     }
 
@@ -49,7 +49,7 @@ public class ContratoServicio implements BaseService<Contrato> {
     }
 
     @Override
-    public Contrato findById(long id) throws Exception {
+    public Contrato findById(Integer id) throws Exception {
         return null;
     }
 
@@ -60,12 +60,12 @@ public class ContratoServicio implements BaseService<Contrato> {
     }
 
     @Override
-    public Contrato update(long id, Contrato entity) throws Exception {
+    public Contrato update(Integer id, Contrato entity) throws Exception {
         return null;
     }
 
     @Override
-    public void deleteById(long id) throws Exception {
+    public void deleteById(Integer id) throws Exception {
 
     }
 
@@ -77,9 +77,9 @@ public class ContratoServicio implements BaseService<Contrato> {
         contratoRepositorio.save(contrato);
     }
 
-    public boolean validarReserva(long idres) throws Exception {
+    public boolean validarReserva(Integer idres) throws Exception {
         String reservaWeb = contratoRepositorio.encontrarReservaLigada(idres);
-        LocalDate fechaActual = LocalDate.now();
+        Date fechaActual = new Date();
         if (reservaWeb.equals("1")) {
             return false;
         } else if (reservaServicio.findById(idres).getFechaRetiro().compareTo(fechaActual) > 0) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class VehiculoServicio implements BaseService<Vehiculo> {
     }
 
     @Override
-    public Vehiculo findById(long id) throws Exception {
+    public Vehiculo findById(Integer id) throws Exception {
         Optional<Vehiculo> obj = vehiculoRepositorio.findById(id);
         return obj.get();
     }
@@ -50,12 +51,12 @@ public class VehiculoServicio implements BaseService<Vehiculo> {
     }
 
     @Override
-    public Vehiculo update(long id, Vehiculo entity) throws Exception {
+    public Vehiculo update(Integer id, Vehiculo entity) throws Exception {
         return null;
     }
 
     @Override
-    public void deleteById(long id) throws Exception {
+    public void deleteById(Integer id) throws Exception {
         try {
             vehiculoRepositorio.deleteById(id);
         } catch (Exception e) {
@@ -63,7 +64,7 @@ public class VehiculoServicio implements BaseService<Vehiculo> {
         }
     }
 
-    public Double costoTotal(String fRetiro, String fDevolucion, Long id) {
+    public Double costoTotal(String fRetiro, String fDevolucion, Integer id) {
         //con el id del vehiculo se obtiene el precio diario
         Double precio = vehiculoRepositorio.precioDiaarioVehiculo(id);
         //con ChronoUnit.DAYS se saca la diferencia en dias entre las fechas de retiro y devolucion

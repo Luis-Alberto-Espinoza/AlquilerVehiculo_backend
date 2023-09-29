@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClienteRepositorio extends JpaRepository<Cliente, Long> {
+public interface ClienteRepositorio extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.mail = :mail")
     public Cliente buscarPorMail(@Param("mail") String mail);
 
     @Query("SELECT c FROM Cliente c WHERE c.dni = :dni")
-    public Cliente buscarPorDNI(@Param("dni") Long dni);
+    public Cliente buscarPorDNI(@Param("dni") Integer dni);
 
     @Query("SELECT COUNT(c.mail) FROM Cliente c WHERE c.mail = :mail")
     public String existeCliente(@Param("mail") String mail);
