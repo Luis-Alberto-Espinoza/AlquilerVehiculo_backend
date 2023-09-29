@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/cliente")
 public class ClienteControlador {
     @Autowired
@@ -26,27 +26,23 @@ public class ClienteControlador {
 
 
     @GetMapping("/")
-    public String clienteInicio(@RequestParam String correo, ModelMap modelo) throws Exception {
-        Cliente usuario = clienteServicio.buscarXcorreo(correo);
-        modelo.addAttribute("clienteLog", usuario);
-        List<Vehiculo> listVehiculos = vehiculoServicio.findAll();
-        modelo.addAttribute("autos", listVehiculos);
+    public String clienteInicio() throws Exception {
+//        Cliente usuario = clienteServicio.buscarXcorreo(correo);
+//        List<Vehiculo> listVehiculos = vehiculoServicio.findAll();
         return "index_cliente";
     }
 
     @GetMapping("/editar-perfil")
-    public String editarPerfil(@RequestParam Long id, ModelMap modelo) {
+    public String editarPerfil(@RequestParam Long id) {
         Cliente clienteLog = null;
         clienteLog = clienteServicio.buscarPorId(id);
-        modelo.addAttribute("perfil", clienteLog);
         return "perfil";
     }
 
     @PostMapping("/actualizar-perfil")
-    public String actualizar(ModelMap modelo, @RequestParam Long id,
+    public String actualizar(@RequestParam Long id,
                              @RequestParam String nombre, @RequestParam String apellido,
-                             @RequestParam String email, //
-                             //@RequestParam long edad, @RequestParam long dni, @RequestParam long telefono,
+                             @RequestParam String email,
                              @RequestParam String clave1, @RequestParam String clave2) throws ClienteServiceException {
         Cliente clienteLog = null;
         clienteLog = clienteServicio.buscarPorId(id);
@@ -56,9 +52,8 @@ public class ClienteControlador {
     }
 
     @GetMapping("/clientes")
-    public String mostrarClientes(ModelMap modelo) throws Exception {
+    public String mostrarClientes() throws Exception {
         List<Cliente> listaCliente = clienteServicio.findAll();
-        modelo.addAttribute("listClient", listaCliente);
         return "clientes";
     }
 }

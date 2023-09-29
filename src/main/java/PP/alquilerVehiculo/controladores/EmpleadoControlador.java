@@ -38,20 +38,17 @@ public class EmpleadoControlador {
 
 
     @GetMapping("/admin")
-    public String adminHome(@RequestParam String correo, ModelMap modelo) throws Exception {
+    public String adminHome(@RequestParam String correo) throws Exception {
         Empleado usuario = empleadoServicio.buscarXmail(correo);
-        modelo.addAttribute("empleadoLog", usuario);
         return "index_admin";
     }
 
 
     @GetMapping("/admin_p")
     //http://localhost:9000/cliente/?correo=Correocliente_14%40correo.com&password=123456
-    public String admin_persona(@RequestParam Long ide, ModelMap modelo) throws Exception {
+    public String admin_persona(@RequestParam Long ide) throws Exception {
         List<Empleado> empleados = empleadoServicio.findAll();
-        modelo.put("emleado", empleados);
         Empleado usuario = empleadoServicio.findById(ide);
-        modelo.put("empleadoLog", usuario);
         return "admin_p";
     }
 
@@ -63,37 +60,27 @@ public class EmpleadoControlador {
     }
 
     @GetMapping("/new_empleado_1")//ide=2009
-    public String new_empleado_1(@RequestParam Long ide, ModelMap modelo) throws Exception {
+    public String new_empleado_1(@RequestParam Long ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
-        modelo.put("empleadoLog", empleado);
         return "new_empleado1";
     }
 
     @GetMapping("/new_empleado_2")//?ide=2009&dni=29148574
-    public String new_empleado_2(@RequestParam Long ide, String dni, ModelMap modelo) throws Exception {
+    public String new_empleado_2(@RequestParam Long ide, String dni) throws Exception {
         Empleado empleadoLog = empleadoServicio.findById(ide);
 
         if (clienteServicio.hayClienteXdni(dni).equals("1")) {
             Cliente clienteNew = clienteServicio.buscarXdni(Long.parseLong(dni));
-            modelo.addAttribute("empleadoLog", empleadoLog);
-            modelo.put("usuario", clienteNew);
-            modelo.addAttribute("formularioTipo", "Alta");
         } else if (empleadoServicio.existeEmpleadoXdni(dni).equals("1")) {
-            modelo.addAttribute("empleadoLog", empleadoLog);
             Empleado empleadoNew = empleadoServicio.buscarXdni(dni);
-            modelo.put("usuario", empleadoNew);
-            modelo.addAttribute("formularioTipo", "Editar");
         } else {
-            modelo.addAttribute("empleadoLog", empleadoLog);
-            modelo.put("usuario", null);
-            modelo.addAttribute("formularioTipo", "Alta");
             return "registrar_empleado";
         }
         return "new_empleado2";
     }
 
     @PostMapping("/new_empleado_3")
-    public String saveNewEmpleado(ModelMap modelo, Long ide,
+    public String saveNewEmpleado(Long ide,
                                   @RequestParam String nombre, @RequestParam String apellido,
                                   @RequestParam String email, @RequestParam String clave1,
                                   @RequestParam String direccion, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fNacimiento,
@@ -123,47 +110,35 @@ public class EmpleadoControlador {
         Empleado empleadoGuarado = empleadoServicio.save(newEmpleado);
         titulo1 = "EXITO!!!!";
         descripcion = "Tome Nota del número de empleado";
-        modelo.addAttribute("titulo1", titulo1);
-        modelo.addAttribute("titulo2", titulo2);
-        modelo.addAttribute("descripcion", descripcion);
         String home = "/empleado/admin/?correo=" + empleado.getMail();
-        modelo.addAttribute("home", home);
-        modelo.put("numero", empleadoServicio.buscarXdni(String.valueOf(dni)).getId());
         return "/exitoGeneral";
     }
 
     @GetMapping("/edit_empleado")
-    public String editarVehiculoEmpleado(Long idm, Long ide, ModelMap model) throws Exception {
+    public String editarVehiculoEmpleado(Long idm, Long ide) throws Exception {
         Empleado aModificar = empleadoServicio.findById(idm);
         Empleado empleado = empleadoServicio.findById(ide);
-        model.addAttribute("formularioTipo", "Editar");
-        model.put("usuario", aModificar);
-        model.put("empleadoLog", empleado);
         return "new_empleado2";
     }
 
     @GetMapping("/admin_v")
     //http://localhost:9000/cliente/?correo=Correocliente_14%40correo.com&password=123456
-    public String admin_vehiculo(@RequestParam Long id, ModelMap modelo) throws Exception {
+    public String admin_vehiculo(@RequestParam Long id) throws Exception {
         Empleado empleado = empleadoServicio.findById(id);
         List<Vehiculo> vehiculo = vehiculoServicio.findAll();
-        modelo.put("empleadoLog", empleado);
-        modelo.put("autos", vehiculo);
         return "admin_v";
     }
 
     @GetMapping("/ventas")
     //http://localhost:9000/cliente/?correo=Correocliente_14%40correo.com&password=123456
-    public String ventasHome(@RequestParam String correo, ModelMap modelo) throws Exception {
+    public String ventasHome(@RequestParam String correo) throws Exception {
         Empleado usuario = empleadoServicio.buscarXmail(correo);
-        modelo.addAttribute("empleadoLog", usuario);
         return "index_ventas";
     }
 
     @GetMapping("/tabla")
-    public String mostrar_e(ModelMap modelo) throws Exception {
+    public String mostrar_e() throws Exception {
         List<Empleado> listaEmpleados = empleadoServicio.findAll();
-        modelo.addAttribute("empleados", listaEmpleados);
         return "hitorial_reserva_cliente";
     }
 

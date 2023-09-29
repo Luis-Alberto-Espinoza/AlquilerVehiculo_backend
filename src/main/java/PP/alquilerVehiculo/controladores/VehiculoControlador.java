@@ -31,24 +31,20 @@ public class VehiculoControlador {
     EmpleadoServicio empleadoServicio;
 
     @GetMapping("/tablav")
-
-    public String listarAutos(ModelMap modelo) throws Exception {
+    public String listarAutos() throws Exception {
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
-        modelo.addAttribute("autos", listaAutos);
         return "autos";
     }
 
     @GetMapping("/new_auto_1")
-    public String new_auto_1(@RequestParam Long id, ModelMap modelo) throws Exception {
+    public String new_auto_1(@RequestParam Long id) throws Exception {
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
         Empleado empleado = empleadoServicio.findById(id);
-        modelo.put("empleadoLog", empleado);
-        modelo.addAttribute("autos", listaAutos);
         return "registro_vehiculo.html";
     }
 
     @PostMapping("/alta")
-    public String alta_vehiculo(ModelMap model, Long id, Long ide,
+    public String alta_vehiculo(Long id, Long ide,
                                 @RequestParam String marca, @RequestParam String modelo,
                                 @RequestParam String patente, @RequestParam String color,
                                 @RequestParam String tipoVehiculo, @RequestParam String cilindradaMotor,
@@ -74,44 +70,33 @@ public class VehiculoControlador {
         titulo1 = "EXITO!!!!";
         titulo2 = "¡Su gestión fue realizada con éxito !";
         descripcion = "El vehículo fue guardado en la Base de Datos.";
-        model.addAttribute("titulo1", titulo1);
-        model.addAttribute("titulo2", titulo2);
-        model.addAttribute("descripcion", descripcion);
-        model.addAttribute("home", home);
         return "exitoGeneral";
     }
 
     @GetMapping("/delet_vehiculo")
-    public String eliminarVehiculo(Long idv, Long ide, ModelMap model) throws Exception {
+    public String eliminarVehiculo(Long idv, Long ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         Vehiculo vehiculo = vehiculoServicio.findById(idv);
         String home = "/empleado/admin/?correo=" + empleado.getMail();
         String titulo1 = "", titulo2 = "", descripcion = "";
         vehiculoServicio.deleteById(idv);
         List<Vehiculo> autos = vehiculoServicio.findAll();
-        model.put("autos", autos);
         titulo1 = "EXITO!!!!";
         titulo2 = "¡Su gestión fue realizada con éxito !";
         descripcion = "El vehículo fue eliminado en la Base de Datos.";
-        model.addAttribute("titulo1", titulo1);
-        model.addAttribute("titulo2", titulo2);
-        model.addAttribute("descripcion", descripcion);
-        model.addAttribute("home", home);
         return "exitoGeneral";
     }
 
     @GetMapping("/edit_vehiculo")
-    public String editarVehiculo(Long idv, Long ide, ModelMap model) throws Exception {
+    public String editarVehiculo(Long idv, Long ide) throws Exception {
         Vehiculo vehiculo = vehiculoServicio.findById(idv);
         Empleado empleado = empleadoServicio.findById(ide);
         List<Vehiculo> autos = vehiculoServicio.findAll();
-        model.put("vehiculo", vehiculo);
-        model.put("empleadoLog", empleado);
         return "editar_vehiculo";
     }
 
     @PostMapping("/actualizar_vehiculo")
-    public String editarVehiculo1(Long idv, Long ide, ModelMap model,
+    public String editarVehiculo1(Long idv, Long ide,
                                   @RequestParam String marca, @RequestParam String modelo,
                                   @RequestParam String patente, @RequestParam String color,
                                   @RequestParam String tipoVehiculo, @RequestParam String cilindradaMotor,
@@ -137,11 +122,6 @@ public class VehiculoControlador {
         titulo1 = "EXITO!!!!";
         titulo2 = "Su Gestión fue satisfactoria";
         List<Vehiculo> autos = vehiculoServicio.findAll();
-        model.put("titulo", "¡Su gestión fue realizada con éxito !");
-        model.put("descripcion", "El vehículo fue modificado en la Base de Datos.");
-        model.addAttribute("titulo1", titulo1);
-        model.addAttribute("titulo2", titulo2);
-        model.addAttribute("home", home);
         return "exitoGeneral";
     }
 }

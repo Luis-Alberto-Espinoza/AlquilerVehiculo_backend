@@ -38,33 +38,25 @@ public class ReservaControlador {
     EmpleadoServicio empleadoServicio;
 
     @GetMapping("/")
-    public String soloReserva(ModelMap modelo, @RequestParam Long ide) throws Exception {
+    public String soloReserva(@RequestParam Long ide) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
-        modelo.put("empleadoLog", empleado);
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
-        modelo.put("autos", listaAutos);
         return "reserva_de_empleado";
     }
 
     @GetMapping("/generar_reserva")
-    public String generar_reserva(ModelMap modelo,
-                                  @RequestParam Long idv,
+    public String generar_reserva(@RequestParam Long idv,
                                   @RequestParam Long idc,
                                   String fecha1,
                                   String fecha2) throws Exception {
         Vehiculo auto = vehiculoServicio.findById(idv);
         Cliente cliente = clienteServicio.findById(idc);
         Double precioTotal = vehiculoServicio.costoTotal(fecha1, fecha2, idv);
-        modelo.put("total", precioTotal);
-        modelo.put("vehiculo", auto);
-        modelo.put("clienteLog", cliente);
-        modelo.put("fecha1", fecha1);
-        modelo.put("fecha2", fecha2);
         return "reserva";
     }
 
     @GetMapping("/generar_reserva_empleado")
-    public String generar_reserva_empleado(ModelMap modelo, @RequestParam Long idv, @RequestParam Long idc,
+    public String generar_reserva_empleado(@RequestParam Long idv, @RequestParam Long idc,
                                            @RequestParam String fRetiro,
                                            @RequestParam String fDevolucion,
                                            @RequestParam Long ide) throws Exception {
@@ -72,33 +64,22 @@ public class ReservaControlador {
         Cliente cliente = clienteServicio.findById(idc);
         Empleado empleado = empleadoServicio.findById(ide);
         Double precioTotal = vehiculoServicio.costoTotal(fRetiro, fDevolucion, idv);
-        modelo.put("total", precioTotal);
-        modelo.put("fRetiro", fRetiro);
-        modelo.put("fDevolucion", fDevolucion);
-        modelo.put("vehiculo", auto);
-        modelo.put("clienteLog", cliente);
-        modelo.put("empleadoLog", empleado);
         return "reserva_empleado";
     }
 
     @GetMapping("/resEmp")
-    public String listarAutosReserva(ModelMap modelo, @RequestParam long dni, @RequestParam Long ide,
+    public String listarAutosReserva(@RequestParam long dni, @RequestParam Long ide,
                                      @RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
                                      @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion
     ) throws Exception {
         Empleado empleado = empleadoServicio.findById(ide);
         List<Vehiculo> listaAutos = vehiculoServicio.autosDisponiblesXfechas(fRetiro, fDevolucion);
         Cliente cliente = clienteServicio.buscarXdni(dni);
-        modelo.put("fRetiro", fRetiro);
-        modelo.put("fDevolucion", fDevolucion);
-        modelo.put("empleadoLog", empleado);
-        modelo.addAttribute("autos", listaAutos);
-        modelo.put("clienteLog", cliente);
         return "autos_reserva";
     }
 
     @PostMapping("/confi_reserva")
-    public String reserva(ModelMap modelo, @RequestParam Long idv, @RequestParam Long idc,
+    public String reserva(@RequestParam Long idv, @RequestParam Long idc,
                           @RequestParam("fecha1") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
                           @RequestParam(value = "fecha2") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion
     ) throws Exception {
@@ -128,18 +109,12 @@ public class ReservaControlador {
         }
         //con el id del cliente se busca la reserva recien guardada para poder pasarla al modelo
         ReservaWeb reservaWeb = reservaServicio.ultimaReserva(cliente);
-        modelo.addAttribute("titulo1", titulo1);
-        modelo.addAttribute("titulo2", titulo2);
-        modelo.addAttribute("descripcion", descripcion);
-        modelo.put("clienteLog", cliente);
-        modelo.put("numero", reservaWeb.getId());
         String home = "/cliente/?correo=" + cliente.getMail();
-        modelo.addAttribute("home", home);
         return "/exitoGeneral";
     }
 
     @PostMapping("/confi_reserva_empleado")
-    public String reserva_empleado(ModelMap modelo, @RequestParam Long idv, @RequestParam Long idc, @RequestParam Long ide,
+    public String reserva_empleado(@RequestParam Long idv, @RequestParam Long idc, @RequestParam Long ide,
                                    @RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
                                    @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion
     ) throws Exception {
@@ -168,69 +143,49 @@ public class ReservaControlador {
         }
         //con el id del cliente se busca la reserva recien guardada para poder pasarla al modelo
         ReservaWeb reservaWeb = reservaServicio.ultimaReserva(cliente);
-        modelo.put("empleadoLog", empleado);
-        modelo.put("clienteLog", cliente);
-        modelo.addAttribute("titulo1", titulo1);
-        modelo.addAttribute("titulo2", titulo2);
-        modelo.addAttribute("descripcion", descripcion);
         String home = "/empleado/ventas/?correo=" + empleado.getMail();
-        modelo.addAttribute("home", home);
-        modelo.put("numero", reservaWeb.getId());
         return "/exitoGeneral";
     }
 
     @GetMapping("/mis_reservas")
-    public String historial(ModelMap modelo, @RequestParam Long idc) throws Exception {
+    public String historial(@RequestParam Long idc) throws Exception {
         Cliente cliente = clienteServicio.findById(idc);
-        modelo.put("clienteLog", cliente);
         return "/cliente/";
     }
 
     @GetMapping("/hreservas")
-    public String h_reserva(@RequestParam Long id, ModelMap modelo) {
+    public String h_reserva(@RequestParam Long id) {
         Cliente cliente = clienteServicio.buscarPorId(id);
         List<ReservaWeb> autosReservados = reservaServicio.lDeAutosR(cliente);
-        modelo.put("autoReservado", autosReservados);
-        modelo.put("clienteLog", cliente);
         return "/hitorial_reserva_cliente";
     }
 
     @GetMapping("/edit_reserva")
-    public String editarReserva(long id_reserva, ModelMap modelo) throws Exception {
+    public String editarReserva(long id_reserva) throws Exception {
         ReservaWeb reservaWeb = reservaServicio.findById(id_reserva);
         List<Vehiculo> listaAutos = vehiculoServicio.findAll();
-        modelo.addAttribute("autos", listaAutos);
         Cliente cliente = clienteServicio.buscarXdni(reservaWeb.getCliente().getDni());
-        modelo.put("clienteLog", cliente);
         return "reserva";
     }
 
     @GetMapping("/delet_reserva")
-    public String eliminarReserva(long id_reserva, ModelMap modelo) throws Exception {
+    public String eliminarReserva(long id_reserva) throws Exception {
         ReservaWeb reservaWeb = reservaServicio.findById(id_reserva);
         Cliente cliente = clienteServicio.buscarXdni(reservaWeb.getCliente().getDni());
         reservaServicio.deleteById(id_reserva);
         List<ReservaWeb> autosReservados = reservaServicio.lDeAutosR(cliente);
-        modelo.put("autoReservado", autosReservados);
-        modelo.put("clienteLog", cliente);
-        modelo.addAttribute("id", cliente.getId());
         return "/hitorial_reserva_cliente";
     }
 
     @GetMapping("/recibir_fecha")
     public String recibir_fecha(@RequestParam("fRetiro") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fRetiro,
                                 @RequestParam(value = "fDevolucion") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fDevolucion,
-                                long idc, ModelMap modelo) throws Exception {
+                                long idc) throws Exception {
         if (fRetiro.compareTo(LocalDate.now()) >= 0) {
             Cliente cliente = clienteServicio.findById(idc);
             List<Vehiculo> vehiculosDisponibles = vehiculoServicio.autosDisponiblesXfechas(fRetiro, fDevolucion);
-            modelo.put("autos", vehiculosDisponibles);
-            modelo.put("clienteLog", cliente);
-            modelo.put("fecha1", fRetiro);
-            modelo.put("fecha2", fDevolucion);
             return "autos_disponibles";
         } else {
-            modelo.put("error", "la fecha retiro no puede ser anteriior a la fecha actual ");
             return "index_cliente";
         }
     }
